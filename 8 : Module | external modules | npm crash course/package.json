@@ -1,0 +1,15 @@
+{
+  "name": "external-modules",
+  "version": "1.0.0",
+  "description": "external-modules",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "movies-names": "^1.1.1",
+    "random-fruits-name": "^1.9.6"
+  }
+}

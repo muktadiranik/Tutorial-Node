@@ -1,0 +1,15 @@
+{
+  "name": "http-routing-and-nodemon-package",
+  "version": "1.0.0",
+  "description": "http-routing-and-nodemon-package",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "nodemon index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "nodemon": "^2.0.22"
+  }
+}
