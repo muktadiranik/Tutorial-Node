@@ -1,28 +1,36 @@
 const mongoose = require("mongoose");
-const encrypt = require("mongoose-encryption");
+const bcrypt = require("bcryptjs"); // Use bcrypt for secure password hashing
 
-const usersSchema = new mongoose.Schema({
+const userSchema = new mongoose.Schema({
   name: {
     type: String,
-    required: [true, "Name is required"],
+    required: true,
   },
   email: {
     type: String,
-    required: [true, "Email is required"],
+    required: true,
     unique: true,
   },
   password: {
     type: String,
-    required: [true, "Password is required"],
+    required: true,
   },
-  date: {
+  created: {
     type: Date,
     default: Date.now,
   },
 });
 
-const encKey = process.env.ENC_KEY;
-const sigKey = process.env.SIG_KEY;
-usersSchema.plugin(encrypt, { secret: encKey, encryptedFields: ["password"] });
+// Hash password before saving (middleware)
+userSchema.pre("save", async function (next) {
+  if (!this.isModified("password")) {
+    return next();
+  }
 
-module.exports = mongoose.model("users", usersSchema);
+  const salt = await bcrypt.genSalt(10);
+  const hash = await bcrypt.hash(this.password, salt);
+  this.password = hash;
+  next();
+});
+
+module.exports.User = mongoose.model("User", userSchema);

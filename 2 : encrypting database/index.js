@@ -5,7 +5,7 @@ const mongoose = require("mongoose");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const dbURL = process.env.MONGODB_URL;
-const Users = require("./models/users.model");
+const { User } = require("./models/users.model");
 
 const connect = async () => {
   try {
@@ -35,19 +35,20 @@ app.get("/users", async (req, res) => {
   }
 });
 
-app.post("/register", (req, res) => {
+app.post("/register", async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const user = new Users({
+    const user = new User({
       name,
       email,
       password,
     });
-    user.save();
+    await user.save();
     res.status(200).json({
       user,
     });
   } catch (error) {
+    console.log(error);
     res.status(500).send(error);
   }
 });
