@@ -5,8 +5,8 @@ const mongoose = require("mongoose");
 const app = express();
 const PORT = process.env.PORT || 3000;
 const dbURL = process.env.MONGODB_URL;
-const { User } = require("./models/users.model");
-const md5 = require("md5");
+const mv5 = require("md5");
+const Users = require("./models/users.model");
 
 const connect = async () => {
   try {
@@ -30,26 +30,27 @@ app.get("/", (req, res) => {
 app.get("/users", async (req, res) => {
   try {
     const users = await Users.find();
-    res.status(200).json({ users });
+    res.status(200).json({
+      users,
+    });
   } catch (error) {
     console.log(error);
   }
 });
 
-app.post("/register", async (req, res) => {
+app.post("/register", (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const user = new User({
-      name: name,
-      email: email,
-      password: md5(password),
+    const user = new Users({
+      name,
+      email,
+      password,
     });
-    await user.save();
+    user.save();
     res.status(200).json({
       user,
     });
   } catch (error) {
-    console.log(error);
     res.status(500).send(error);
   }
 });
@@ -57,10 +58,8 @@ app.post("/register", async (req, res) => {
 app.post("/login", async (req, res) => {
   try {
     const { email, password } = req.body;
-    const hashedPassword = md5(password);
-    console.log(hashedPassword);
-    const user = await User.findOne({ email: email });
-    if (user && hashedPassword === password) {
+    const user = await Users.findOne({ email: email });
+    if (user && user.password === password) {
       res.status(200).json({
         user,
       });
