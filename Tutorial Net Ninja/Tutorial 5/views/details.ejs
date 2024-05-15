@@ -1,0 +1,37 @@
+<html lang="en">
+  <%- include("./partials/head.ejs") %>
+
+  <body>
+    <%- include("./partials/nav.ejs") %>
+
+    <div class="details content">
+      <h2><%= blog.title %></h2>
+      <div class="content">
+        <p><%= blog.body %></p>
+      </div>
+      <button class="btn btn-danger" id="delete">
+        <a data-doc="<%= blog._id %>"><i class="fa-solid fa-trash-can"></i></a>
+      </button>
+    </div>
+
+    <%- include("./partials/footer.ejs") %>
+
+    <script>
+      document.addEventListener("DOMContentLoaded", function () {
+        const deleteButton = document.getElementById("delete");
+
+        deleteButton.addEventListener("click", (e) => {
+          const blogId = deleteButton.querySelector("a").getAttribute("data-doc");
+          const endpoint = `/blogs/${blogId}`;
+
+          fetch(endpoint, {
+            method: "DELETE",
+          })
+            .then((response) => response.json())
+            .then((data) => (window.location.href = data.redirect))
+            .catch((err) => console.log(err));
+        });
+      });
+    </script>
+  </body>
+</html>
